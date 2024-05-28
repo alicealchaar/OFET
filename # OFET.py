@@ -14,7 +14,7 @@ def colunas_extras(ids):
         abs_ids.append(abs(i))
         sqrt_ids.append(np.sqrt(abs(i)))
     plt.plot(vgs,sqrt_ids)
-    #plt.plot(vds,sqrt_ids, label = 'VDS')
+    plt.plot(vds,sqrt_ids, label = 'VDS')
     plt.xlabel('VGS')
     plt.ylabel('sqrt(IDS)')
     plt.show(block=False)
@@ -27,12 +27,12 @@ def ler_arquivo_txt(caminho_arquivo):
     nome_arquivo = os.path.splitext(os.path.basename(caminho_arquivo))[0]
     with open(caminho_arquivo, 'r') as arquivo:
         linhas = arquivo.readlines()
-        #tempo = []
-        #vds = []
+        tempo = []
+        vds = []
         vgs = []
         ids = []
-        #igs = []
-        #potência = []
+        igs = []
+        potência = []
         armazenar = False 
 
         for linha in linhas:
@@ -43,12 +43,12 @@ def ler_arquivo_txt(caminho_arquivo):
                 if linha[0].isalpha() or linha[0].isspace():
                     break  
                 colunas = linha.split()
-                #tempo.append(float(colunas[0]))
-                #vds.append (float(colunas[1]))
-                vgs.append(float(colunas[0]))
-                ids.append(float(colunas[1]))
-                #igs.append(float(colunas[4]))
-                #potência.append(float(colunas[5]))
+                tempo.append(float(colunas[0]))
+                vds.append (float(colunas[1]))
+                vgs.append(float(colunas[2]))
+                ids.append(float(colunas[3]))
+                igs.append(float(colunas[4]))
+                potência.append(float(colunas[5]))
     colunas_extras(ids)
     v_inicial=float(input("Digite o valor inicial da tensão da parte da curva onde começa a reta: "))
     v_final = float(input("Agora, o valor final: "))
@@ -76,24 +76,22 @@ def ler_arquivo_txt(caminho_arquivo):
     plt.ylabel('sqrt(IDS)')
     plt.legend()
     plt.show()
-    print(f'O coeficiente é {coef_saturação}')
-    print(f'slope {a}')
+    print(f'O coeficiente de saturação é {coef_saturação}')
+    # print(f'slope {a}')
     print(f'O valor de x para y=0 é {x0}')
 
-# def salvar_dados():
-#     with open(caminho_arquivo, 'w') as file:
-#         file.write("Tempo            VDS              VGS              IDS              IGS         |IDS|         sqrt(|IDS|)    V_limiar    coef_angular  mobilidade\n")
-#         for i in range(len(tempo)):
-#             if i == 0:
-#                 file.write("{:.7e}  {:.7e}  {:.7e}  {:.7e}  {:.7e} {:.7e}  {:.7e}    {:.7e}  {:.7e}       {:.7e}\n".format(
-#                     tempo[i], vds[i], vgs[i], ids[i], igs[i], abs_ids[i], sqrt_ids[i], x0, a, coef_saturação))
-#             else:
-#                 file.write("{:.7e}  {:.7e}  {:.7e}  {:.7e}  {:.7e} {:.7e}  {:.7e}    \n".format(
-#                     tempo[i], vds[i], vgs[i], ids[i], igs[i], abs_ids[i], sqrt_ids[i]))
+def salvar_dados():
+    with open(caminho_arquivo, 'w') as file:
+        file.write("Tempo            VDS              VGS              IDS              IGS         |IDS|         sqrt(|IDS|)    V_limiar    coef_angular  mobilidade\n")
+        for i in range(len(tempo)):
+            if i == 0:
+                file.write("{:.7e}  {:.7e}  {:.7e}  {:.7e}  {:.7e} {:.7e}  {:.7e}    {:.7e}  {:.7e}   {:.7e}\n".format(
+                    tempo[i], vds[i], vgs[i], ids[i], igs[i], abs_ids[i], sqrt_ids[i], x0, a, coef_saturação))
+            else:
+                file.write("{:.7e}  {:.7e}  {:.7e}  {:.7e}  {:.7e} {:.7e}  {:.7e}    \n".format(
+                    tempo[i], vds[i], vgs[i], ids[i], igs[i], abs_ids[i], sqrt_ids[i]))
 
-# caminho_arquivo = 'C:/Users/Estudante/Desktop/LOEM/Alice/OFET/Disp1/30um medida1 transf -40V.txt'
-caminho_arquivo = 'C:/Users/Estudante/Desktop/LOEM/Alice/OFET/ex.txt'
-# caminho_arquivo = 'C:/Users/alice/Documents/IC/OFET/30um medida1 transf -40V.txt'
+caminho_arquivo = 'C:/Users/Estudante/Desktop/LOEM/Alice/OFET/Disp1/30um medida1 transf -40V.txt'
 ler_arquivo_txt(caminho_arquivo)
-#salvar_dados()
+salvar_dados()
 
