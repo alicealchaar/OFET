@@ -16,11 +16,11 @@ def colunas_extras(ids):
     for i in ids:
         abs_ids.append(abs(i))
         sqrt_ids.append(np.sqrt(abs(i)))
-    plt.plot(vgs,sqrt_ids)
-    plt.plot(vds,sqrt_ids, label = 'VDS')
-    plt.xlabel('VGS')
-    plt.ylabel('sqrt(IDS)')
-    plt.show(block=False)
+    # plt.plot(vgs,sqrt_ids)
+    # plt.plot(vds,sqrt_ids, label = 'VDS')
+    # plt.xlabel('VGS')
+    # plt.ylabel('sqrt(IDS)')
+    # plt.show(block=False)
 
 def reta(x,a,b):
     return a * x + b
@@ -29,7 +29,6 @@ def ler_arquivo_txt(caminho_arquivo,L,W,Ci,j):
     global tempo,vds,vgs,ids,igs,vgs,potência, v_inicial,v_final, vgs_intervalo,ids_intervalo,x0,a, coef_saturação
     vgs_intervalo=[]
     ids_intervalo=[]
-    #nome_arquivo = os.path.splitext(os.path.basename(arquivo))[0]
     with open(caminho_arquivo, 'r') as arquivo:
         linhas = arquivo.readlines()
         tempo = []
@@ -55,12 +54,11 @@ def ler_arquivo_txt(caminho_arquivo,L,W,Ci,j):
                 igs.append(float(colunas[4]))
                 potência.append(float(colunas[5]))
     colunas_extras(ids)
-    v_inicial=float(input("Digite o valor inicial da tensão da parte da curva onde começa a reta: "))
-    v_final = float(input("Agora, o valor final: "))
-    # Ci = float(input("Digite o valor da capacitância específica do dielétrico(μF/m^2): "))*(10**-10)
-    # L = float(input("Digite o comprimento do canal(μm): "))
-    # W = float(input("Digite a largura do canal(μm): "))
-    plt.close()
+    # v_inicial=float(input("Digite o valor inicial da tensão da parte da curva onde começa a reta: "))
+    # v_final = float(input("Agora, o valor final: "))
+    v_inicial = int(-15)
+    v_final = int(-17)
+    # plt.close()
     for pos,i in enumerate(vgs):
         if pos>0:
             if i>vgs[pos-1]:
@@ -74,15 +72,14 @@ def ler_arquivo_txt(caminho_arquivo,L,W,Ci,j):
     a, b = coef
     x0 = -b/a
     coef_saturação = (2*L*a*a)/(W*Ci)
-    plt.plot(vgs,sqrt_ids)
-    #plt.plot(vgs_intervalo, ids_intervalo, 'o', label='Dados experimentais',markersize=5)
-    plt.plot(vgs_intervalo, reta(vgs_intervalo, a, b), 'r-', label=f'Fitting {j}')
-    plt.xlabel('VGS')
-    plt.ylabel('sqrt(IDS)')
-    plt.legend()
-    plt.show()
+    # plt.plot(vgs,sqrt_ids)
+    # #plt.plot(vgs_intervalo, ids_intervalo, 'o', label='Dados experimentais',markersize=5)
+    # plt.plot(vgs_intervalo, reta(vgs_intervalo, a, b), 'r-', label=f'Fitting {j}')
+    # plt.xlabel('VGS')
+    # plt.ylabel('sqrt(IDS)')
+    # plt.legend()
+    # plt.show()
     # print(f'O coeficiente de saturação é {coef_saturação}')
-    # print(f'slope {a}')
     # print(f'O valor de x para y=0 é {x0}')
     v_limiar_todos.append(x0)
 
@@ -97,7 +94,7 @@ def salvar_dados():
             else:
                 file.write("{:.7e}  {:.7e}  {:.7e}  {:.7e}  {:.7e} {:.7e}  {:.7e}    \n".format(
                     tempo[i], vds[i], vgs[i], ids[i], igs[i], abs_ids[i], sqrt_ids[i]))
-pasta = 'C:/Users/Estudante/Desktop/LOEM/Alice/OFET/24 06 05/40um'
+pasta = 'C:/Users/Estudante/Desktop/LOEM/Alice/OFET/24 06 05/80um'
 nome_pasta= os.path.basename(pasta)
 match = re.search(r'\d+',nome_pasta)
 L = int(match.group())
@@ -109,11 +106,21 @@ for j,caminho_arquivo in enumerate (arquivos):
     ler_arquivo_txt(caminho_arquivo,L,W,Ci,j)
     salvar_dados()
 
-plt.plot(medidas,v_limiar_todos,marker = 'o')
-plt.xlabel('Medidas')
-plt.ylabel('V_limiar')
-plt.show()
-plt.plot(medidas,v_limiar_todos)
+medidas_par = []
+medidas_impar = []
+v_par = []
+v_impar = []
+for k in range(len(medidas)):
+    if k % 2 == 0:
+        if k !=14 and k!=13: 
+            medidas_par.append(k)
+            v_par.append(v_limiar_todos[k])
+    else:
+        if k !=14 and k!=13:
+            medidas_impar.append(k)
+            v_impar.append(v_limiar_todos[k])
+plt.plot(medidas_par,v_par,marker = 'o', color = 'blue')
+plt.plot(medidas_impar,v_impar,marker = 'o', color = 'red')
 plt.xlabel('Medidas')
 plt.ylabel('V_limiar')
 plt.show()
