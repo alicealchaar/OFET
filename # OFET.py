@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import os
 from tkinter import filedialog
 from scipy.optimize import curve_fit
+import glob
 
 tempo,vds,vgs,ids,vgs,potência,v_inicial,v_final,x0,a,coef_saturação = [None]*11
 abs_ids,sqrt_ids,vgs_intervalo,ids_intervalo = [],[],[],[]
@@ -24,7 +25,7 @@ def reta(x,a,b):
 
 def ler_arquivo_txt(caminho_arquivo):
     global tempo,vds,vgs,ids,igs,vgs,potência, v_inicial,v_final, vgs_intervalo,ids_intervalo,x0,a, coef_saturação
-    nome_arquivo = os.path.splitext(os.path.basename(caminho_arquivo))[0]
+    #nome_arquivo = os.path.splitext(os.path.basename(arquivo))[0]
     with open(caminho_arquivo, 'r') as arquivo:
         linhas = arquivo.readlines()
         tempo = []
@@ -81,7 +82,7 @@ def ler_arquivo_txt(caminho_arquivo):
     print(f'O valor de x para y=0 é {x0}')
 
 def salvar_dados():
-    with open(caminho_arquivo, 'w') as file:
+    with open(arquivo, 'w') as file:
         file.write("Tempo            VDS              VGS              IDS              IGS         |IDS|         sqrt(|IDS|)    V_limiar    coef_angular  mobilidade\n")
         for i in range(len(tempo)):
             if i == 0:
@@ -90,8 +91,11 @@ def salvar_dados():
             else:
                 file.write("{:.7e}  {:.7e}  {:.7e}  {:.7e}  {:.7e} {:.7e}  {:.7e}    \n".format(
                     tempo[i], vds[i], vgs[i], ids[i], igs[i], abs_ids[i], sqrt_ids[i]))
-
-caminho_arquivo = 'C:/Users/Estudante/Desktop/LOEM/Alice/OFET/Disp1/30um medida1 transf -40V.txt'
-ler_arquivo_txt(caminho_arquivo)
-salvar_dados()
+pasta = 'C:/Users/Estudante/Desktop/LOEM/Alice'
+nome_pasta= os.path.basename(pasta)
+print(nome_pasta)
+arquivos = glob.glob(os.path.join(pasta,"*.txt"))
+for caminho_arquivo in arquivos:
+    ler_arquivo_txt(caminho_arquivo)
+    salvar_dados()
 
