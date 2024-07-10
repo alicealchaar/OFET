@@ -96,11 +96,11 @@ def salvar_dados():
                     tempo[i], vds[i], vgs[i], ids[i], igs[i], abs_ids[i], sqrt_ids[i]))
 pasta = 'C:/Users/Estudante/Desktop/LOEM/Alice/OFET/24 06 05/80um'
 nome_pasta= os.path.basename(pasta)
-match = re.search(r'\d+',nome_pasta)
+match = re.search(r'\d+',nome_pasta) #para pegar o comprimento do canal a partir do nome do arquivo
 L = int(match.group())
 W = 1000
 Ci = 50
-arquivos = glob.glob(os.path.join(pasta,"*.txt"))
+arquivos = glob.glob(os.path.join(pasta,"*.txt")) #para ler cada cada arquivo .txt dentro da pasta
 for j,caminho_arquivo in enumerate (arquivos):
     medidas.append(j)
     ler_arquivo_txt(caminho_arquivo,L,W,Ci,j)
