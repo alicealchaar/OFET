@@ -1,4 +1,5 @@
 # OFET
+#Para o programa atualizado pelo Fred
 import numpy as np
 import matplotlib.pyplot as plt
 import os
