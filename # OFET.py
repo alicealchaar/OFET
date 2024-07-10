@@ -57,7 +57,7 @@ def ler_arquivo_txt(caminho_arquivo,L,W,Ci,j):
     colunas_extras(ids)
     # v_inicial=float(input("Digite o valor inicial da tensão da parte da curva onde começa a reta: "))
     # v_final = float(input("Agora, o valor final: "))
-    v_inicial = int(-15)
+    v_inicial = int(-15)       ##########Lembrar de ajeitar esses valores
     v_final = int(-17)
     # plt.close()
     for pos,i in enumerate(vgs):
@@ -97,7 +97,7 @@ def salvar_dados():
                     tempo[i], vds[i], vgs[i], ids[i], igs[i], abs_ids[i], sqrt_ids[i]))
 pasta = 'C:/Users/Estudante/Desktop/LOEM/Alice/OFET/24 06 05/80um'
 nome_pasta= os.path.basename(pasta)
-match = re.search(r'\d+',nome_pasta) #para pegar o comprimento do canal a partir do nome do arquivo
+match = re.search(r'\d+',nome_pasta) #para pegar o comprimento do canal a partir do nome da pasta
 L = int(match.group())
 W = 1000
 Ci = 50
@@ -107,21 +107,7 @@ for j,caminho_arquivo in enumerate (arquivos):
     ler_arquivo_txt(caminho_arquivo,L,W,Ci,j)
     salvar_dados()
 
-medidas_par = []
-medidas_impar = []
-v_par = []
-v_impar = []
-for k in range(len(medidas)):
-    if k % 2 == 0:
-        if k !=14 and k!=13: 
-            medidas_par.append(k)
-            v_par.append(v_limiar_todos[k])
-    else:
-        if k !=14 and k!=13:
-            medidas_impar.append(k)
-            v_impar.append(v_limiar_todos[k])
-plt.plot(medidas_par,v_par,marker = 'o', color = 'blue')
-plt.plot(medidas_impar,v_impar,marker = 'o', color = 'red')
+plt.plot(medidas,v_limiar_todos,marker = 'o', color = 'blue')
 plt.xlabel('Medidas')
 plt.ylabel('V_limiar')
 plt.show()
