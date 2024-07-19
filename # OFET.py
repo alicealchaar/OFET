@@ -78,7 +78,7 @@ def ler_arquivo_txt(caminho_arquivo):
     plt.show()
     print(f'O coeficiente de saturação é {coef_saturação}')
     # print(f'slope {a}')
-    print(f'O valor de x para y=0 é {x0}')
+    print(f'A tensa limiar é {x0}')
 
 def salvar_dados():
     with open(caminho_arquivo, 'w') as file:
