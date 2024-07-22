@@ -58,8 +58,8 @@ def ler_arquivo_txt(caminho_arquivo,L,W,Ci,j):
     # v_inicial=float(input("Digite o valor inicial da tensão da parte da curva onde começa a reta: "))
     # v_final = float(input("Agora, o valor final: "))
     if medida_dia_17:
-        v_inicial = int(-15)
-        v_final = int(-20)
+        v_inicial = int(-18)
+        v_final = int(-25)
     else: 
         v_inicial = int(-5)       
         v_final = int(-7)
