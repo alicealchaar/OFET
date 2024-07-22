@@ -95,7 +95,7 @@ def salvar_dados():
             else:
                 file.write("{:.7e}  {:.7e}  {:.7e}  {:.7e}  {:.7e} {:.7e}  {:.7e}    \n".format(
                     tempo[i], vds[i], vgs[i], ids[i], igs[i], abs_ids[i], sqrt_ids[i]))
-pasta = 'C:/Users/Estudante/Desktop/LOEM/Alice/OFET/24 07 19/80um escrever_apagar'
+pasta = 'C:/Users/Estudante/Desktop/LOEM/Alice/OFET/24 07 19/'
 nome_pasta= os.path.basename(pasta)
 match = re.search(r'\d+',nome_pasta) #para pegar o comprimento do canal a partir do nome da pasta
 L = int(match.group())
@@ -103,7 +103,6 @@ W = 1000
 Ci = 50
 arquivos = glob.glob(os.path.join(pasta,"*.txt")) #para ler cada cada arquivo .txt dentro da pasta
 for j,caminho_arquivo in enumerate (arquivos):
-    nome_arquivo = os.path.basename(caminho_arquivo) #
     medidas.append(j)
     ler_arquivo_txt(caminho_arquivo,L,W,Ci,j)
     salvar_dados()
