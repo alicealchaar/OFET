@@ -115,3 +115,5 @@ plt.plot(medidas,v_limiar_todos,marker = 'o', color = 'blue')
 plt.xlabel('Medidas')
 plt.ylabel('V_limiar')
 plt.show()
+
+#oiiiiiiiiiiiii
