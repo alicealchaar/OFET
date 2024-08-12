@@ -57,8 +57,8 @@ def ler_arquivo_txt(caminho_arquivo,L,W,Ci,j):
     colunas_extras(ids)
     # v_inicial=float(input("Digite o valor inicial da tensão da parte da curva onde começa a reta: "))
     # v_final = float(input("Agora, o valor final: "))
-    v_inicial = int(-18)       ##########Lembrar de ajeitar esses valores
-    v_final = int(-25)
+    v_inicial = int(-9)       ##########Lembrar de ajeitar esses valores
+    v_final = int(-10)
     # plt.close()
     for pos,i in enumerate(vgs):
         if pos>0:
@@ -74,7 +74,7 @@ def ler_arquivo_txt(caminho_arquivo,L,W,Ci,j):
     x0 = -b/a
     coef_saturação = (2*L*a*a)/(W*Ci)
     # plt.plot(vgs,sqrt_ids)
-    # #plt.plot(vgs_intervalo, ids_intervalo, 'o', label='Dados experimentais',markersize=5)
+    # # plt.plot(vgs_intervalo, ids_intervalo, 'o', label='Dados experimentais',markersize=5)
     # plt.plot(vgs_intervalo, reta(vgs_intervalo, a, b), 'r-', label=f'Fitting {j}')
     # plt.xlabel('VGS')
     # plt.ylabel('sqrt(IDS)')
@@ -95,7 +95,7 @@ def salvar_dados():
             else:
                 file.write("{:.7e}  {:.7e}  {:.7e}  {:.7e}  {:.7e} {:.7e}  {:.7e}    \n".format(
                     tempo[i], vds[i], vgs[i], ids[i], igs[i], abs_ids[i], sqrt_ids[i]))
-pasta = 'C:/Users/Estudante/Desktop/LOEM/Alice/OFET/24 07 19/80um Escrever memória (-40V)'
+pasta = 'C:/Users/Estudante/Desktop/LOEM/Alice/OFET/24 08 12 (férias)/Disp 1/80 um 24 07 31 apagado'
 nome_pasta= os.path.basename(pasta)
 match = re.search(r'\d+',nome_pasta) #para pegar o comprimento do canal a partir do nome da pasta
 L = int(match.group())
@@ -106,10 +106,10 @@ for j,caminho_arquivo in enumerate (arquivos):
     nome_arquivo = os.path.basename(caminho_arquivo) #
     medidas.append(j)
     ler_arquivo_txt(caminho_arquivo,L,W,Ci,j)
-#    salvar_dados()
-    plt.plot(vgs,ids)
+    salvar_dados()
+    plt.plot(vgs,sqrt_ids)
     plt.xlabel("VGS")
-    plt.ylabel("IDS")
+    plt.ylabel("sqrt(IDS)")
 plt.show()
 
 plt.plot(medidas,v_limiar_todos,marker = 'o', color = 'blue')
