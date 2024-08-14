@@ -8,8 +8,6 @@ from scipy.optimize import curve_fit
 import glob
 import re
 
-tempo,vds,vgs,ids,vgs,potência,v_inicial,v_final,x0,a,coef_saturação, medida_dia_17 = [None]*12
-abs_ids,sqrt_ids,vgs_intervalo,ids_intervalo,v_limiar_todos, medidas, v_escrever, v_apagar= [],[],[],[],[],[],[],[]
 
 def colunas_extras(ids):
     global abs_ids,sqrt_ids
