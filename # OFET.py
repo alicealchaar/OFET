@@ -124,3 +124,5 @@ plt.plot(medidas,v_apagar,marker = 'o', color = 'red')
 plt.xlabel('Medidas')
 plt.ylabel('V_limiar')
 plt.show()
+
+###########
