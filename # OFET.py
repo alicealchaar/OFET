@@ -31,10 +31,11 @@ def ler_arquivo_txt(caminho_arquivo):
                 v_limiar.append (float(colunas[1]))
     return medidas, v_limiar
 
-pasta = 'C:/Users/Estudante/Desktop/LOEM/Alice/OFET/24 08 12 (férias)/Disp 1/50um'
+pasta = 'C:/Users/Estudante/Desktop/LOEM/Alice/OFET/24 08 12 (férias)/Disp 2/80um'
 arquivos = glob.glob(os.path.join(pasta,"*.txt")) #para ler cada cada arquivo .txt dentro da pasta
 
 for j,caminho_arquivo in enumerate (arquivos):
+    nome_arquivo = os.path.basename(caminho_arquivo)
     m,v = ler_arquivo_txt(caminho_arquivo)
     if '(-10)' in nome_arquivo:
         v_apagar = v
@@ -42,7 +43,6 @@ for j,caminho_arquivo in enumerate (arquivos):
     else:
         v_escrever = v
         medidas_escrever = m
-
 
 plt.plot(medidas_escrever,v_escrever,marker = 'o', color = 'blue')
 plt.plot(medidas_apagar,v_apagar,marker = 'o', color = 'red')
