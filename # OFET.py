@@ -125,4 +125,4 @@ plt.xlabel('Medidas')
 plt.ylabel('V_limiar')
 plt.show()
 
-###########
+
