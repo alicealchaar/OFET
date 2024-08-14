@@ -95,7 +95,7 @@ def salvar_dados():
             else:
                 file.write("{:.7e}  {:.7e}  {:.7e}  {:.7e}  {:.7e} {:.7e}  {:.7e}    \n".format(
                     tempo[i], vds[i], vgs[i], ids[i], igs[i], abs_ids[i], sqrt_ids[i]))
-pasta = 'C:/Users/Estudante/Desktop/LOEM/Alice/OFET/24 08 12 (férias)/Disp 1/80 um 24 07 31 apagado'
+pasta = 'C:/Users/Estudante/Desktop/LOEM/Alice/OFET/24 08 12 (férias)/Disp 1/50um/50um 24 08 01 (-10V)'
 nome_pasta= os.path.basename(pasta)
 match = re.search(r'\d+',nome_pasta) #para pegar o comprimento do canal a partir do nome da pasta
 L = int(match.group())
@@ -116,3 +116,13 @@ plt.plot(medidas,v_limiar_todos,marker = 'o', color = 'blue')
 plt.xlabel('Medidas')
 plt.ylabel('V_limiar')
 plt.show()
+
+def criar_arquivo(diretorio):
+    nome = "_DadosTemporais.txt"
+    caminho = os.path.join(diretorio, nome)
+    with open(caminho, 'w') as file:
+        for i in range (len(medidas)):
+            file.write("{:.7e}  {:.7e}\n".format(medidas[i],v_limiar_todos[i]))
+
+criar_arquivo(pasta)
+print("Os dados foram salvos com sucesso!")
