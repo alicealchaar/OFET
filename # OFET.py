@@ -8,36 +8,17 @@ from scipy.optimize import curve_fit
 import glob
 import re
 
+v_escrever = []
+medidas_escrever = []
+v_apagar = []
+medidas_apagar = []
 
-def colunas_extras(ids):
-    global abs_ids,sqrt_ids
-    abs_ids,sqrt_ids =[],[]
-    for i in ids:
-        abs_ids.append(abs(i))
-        sqrt_ids.append(np.sqrt(abs(i)))
-    # plt.plot(vgs,sqrt_ids)
-    # plt.plot(vds,sqrt_ids, label = 'VDS')
-    # plt.xlabel('VGS')
-    # plt.ylabel('sqrt(IDS)')
-    # plt.show(block=False)
-
-def reta(x,a,b):
-    return a * x + b
-
-def ler_arquivo_txt(caminho_arquivo,L,W,Ci,j):
-    global tempo,vds,vgs,ids,igs,vgs,potência, v_inicial,v_final, vgs_intervalo,ids_intervalo,x0,a, coef_saturação
-    vgs_intervalo=[]
-    ids_intervalo=[]
+def ler_arquivo_txt(caminho_arquivo):
+    medidas=[]
+    v_limiar=[]
     with open(caminho_arquivo, 'r') as arquivo:
         linhas = arquivo.readlines()
-        tempo = []
-        vds = []
-        vgs = []
-        ids = []
-        igs = []
-        potência = []
         armazenar = False
-
         for linha in linhas:
             if not armazenar:
                 if  linha[0].isnumeric() or linha[0] == '-':
@@ -46,81 +27,26 @@ def ler_arquivo_txt(caminho_arquivo,L,W,Ci,j):
                 if linha[0].isalpha() or linha[0].isspace():
                     break
                 colunas = linha.split()
-                tempo.append(float(colunas[0]))
-                vds.append (float(colunas[1]))
-                vgs.append(float(colunas[2]))
-                ids.append(float(colunas[3]))
-                igs.append(float(colunas[4]))
-                potência.append(float(colunas[5]))
-    colunas_extras(ids)
-    # v_inicial=float(input("Digite o valor inicial da tensão da parte da curva onde começa a reta: "))
-    # v_final = float(input("Agora, o valor final: "))
-    if medida_dia_17:
-        v_inicial = int(-18)
-        v_final = int(-25)
-    else: 
-        v_inicial = int(-5)       
-        v_final = int(-7)
-    # plt.close()
-    for pos,i in enumerate(vgs):
-        if pos>0:
-            if i>vgs[pos-1]:
-                break
-            if i<=v_inicial and i>=v_final:
-                vgs_intervalo.append(i)
-                ids_intervalo.append(sqrt_ids[pos])
-    vgs_intervalo = np.array(vgs_intervalo)
-    ids_intervalo = np.array(ids_intervalo)
-    coef, incerteza = curve_fit(reta, vgs_intervalo, ids_intervalo)
-    a, b = coef
-    x0 = -b/a
-    coef_saturação = (2*L*a*a)/(W*Ci)
-    v_limiar_todos.append(x0)
-    if medida_dia_17:
-        v_escrever.append(x0)
-    else:
-        v_apagar.append(x0)
+                medidas.append(float(colunas[0]))
+                v_limiar.append (float(colunas[1]))
+    return medidas, v_limiar
 
-def salvar_dados():
-    with open(caminho_arquivo, 'w') as file:
-        file.write("Tempo            VDS              VGS              IDS              IGS         |IDS|         sqrt(|IDS|)    V_limiar    coef_angular  mobilidade\n")
-        for i in range(len(tempo)):
-            if i == 0:
-                file.write("{:.7e}  {:.7e}  {:.7e}  {:.7e}  {:.7e} {:.7e}  {:.7e}    {:.7e}  {:.7e}   {:.7e}\n".format(
-                    tempo[i], vds[i], vgs[i], ids[i], igs[i], abs_ids[i], sqrt_ids[i], x0, a, coef_saturação))
-            else:
-                file.write("{:.7e}  {:.7e}  {:.7e}  {:.7e}  {:.7e} {:.7e}  {:.7e}    \n".format(
-                    tempo[i], vds[i], vgs[i], ids[i], igs[i], abs_ids[i], sqrt_ids[i]))
 pasta = 'C:/Users/Estudante/Desktop/LOEM/Alice/OFET/24 08 12 (férias)/Disp 1/50um'
-nome_pasta= os.path.basename(pasta)
-match = re.search(r'\d+',nome_pasta) #para pegar o comprimento do canal a partir do nome da pasta
-L = int(match.group())
-W = 1000
-Ci = 50
 arquivos = glob.glob(os.path.join(pasta,"*.txt")) #para ler cada cada arquivo .txt dentro da pasta
+
 for j,caminho_arquivo in enumerate (arquivos):
-    nome_arquivo = os.path.basename(caminho_arquivo) #
-
-    if '17~' in nome_arquivo:
-        medida_dia_17 = 'sim'
+    m,v = ler_arquivo_txt(caminho_arquivo)
+    if '(-10)' in nome_arquivo:
+        v_apagar = v
+        medidas_apagar = m
     else:
-        medida_dia_17 = None
-
-    medidas.append(j)
-    ler_arquivo_txt(caminho_arquivo,L,W,Ci,j)
-#    salvar_dados()
-#     plt.plot(vgs,ids)
-#     plt.xlabel("VGS")
-#     plt.ylabel("IDS")
-# plt.show()
+        v_escrever = v
+        medidas_escrever = m
 
 
-medidas = list(range(1,201))
-
-plt.plot(medidas,v_escrever,marker = 'o', color = 'blue')
-plt.plot(medidas,v_apagar,marker = 'o', color = 'red')
+plt.plot(medidas_escrever,v_escrever,marker = 'o', color = 'blue')
+plt.plot(medidas_apagar,v_apagar,marker = 'o', color = 'red')
 plt.xlabel('Medidas')
 plt.ylabel('V_limiar')
 plt.show()
-
 
