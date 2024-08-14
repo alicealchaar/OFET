@@ -57,8 +57,8 @@ def ler_arquivo_txt(caminho_arquivo,L,W,Ci,j):
     colunas_extras(ids)
     # v_inicial=float(input("Digite o valor inicial da tensão da parte da curva onde começa a reta: "))
     # v_final = float(input("Agora, o valor final: "))
-    v_inicial = int(-9)       ##########Lembrar de ajeitar esses valores
-    v_final = int(-10)
+    v_inicial = int(-17)       ##########Lembrar de ajeitar esses valores
+    v_final = int(-20)
     # plt.close()
     for pos,i in enumerate(vgs):
         if pos>0:
@@ -95,7 +95,7 @@ def salvar_dados():
             else:
                 file.write("{:.7e}  {:.7e}  {:.7e}  {:.7e}  {:.7e} {:.7e}  {:.7e}    \n".format(
                     tempo[i], vds[i], vgs[i], ids[i], igs[i], abs_ids[i], sqrt_ids[i]))
-pasta = 'C:/Users/Estudante/Desktop/LOEM/Alice/OFET/24 08 12 (férias)/Disp 1/50um/50um 24 08 01 (-10V)'
+pasta = 'C:/Users/Estudante/Desktop/LOEM/Alice/OFET/24 08 12 (férias)/Disp 2/80um/80um 24 08 08 (-40V) perfeito'
 nome_pasta= os.path.basename(pasta)
 match = re.search(r'\d+',nome_pasta) #para pegar o comprimento do canal a partir do nome da pasta
 L = int(match.group())
