@@ -50,11 +50,16 @@ def ler_arquivo_txt(caminho_arquivo):
                 igs.append(float(colunas[4]))
                 potência.append(float(colunas[5]))
     colunas_extras(ids)
-    v_inicial=float(input("Digite o valor inicial da tensão da parte da curva onde começa a reta: "))
-    v_final = float(input("Agora, o valor final: "))
-    Ci = float(input("Digite o valor da capacitância específica do dielétrico(μF/m^2): "))*(10**-10)
-    L = float(input("Digite o comprimento do canal(μm): "))
-    W = float(input("Digite a largura do canal(μm): "))
+    # v_inicial=float(input("Digite o valor inicial da tensão da parte da curva onde começa a reta: "))
+    # v_final = float(input("Agora, o valor final: "))
+    # Ci = float(input("Digite o valor da capacitância específica do dielétrico(μF/m^2): "))*(10**-10)
+    # L = float(input("Digite o comprimento do canal(μm): "))
+    # W = float(input("Digite a largura do canal(μm): "))
+    v_inicial = -30
+    v_final = -40
+    Ci = 50
+    L = 80
+    W = 1000
     plt.close()
     for pos,i in enumerate(vgs):
         if pos>0:
@@ -71,14 +76,19 @@ def ler_arquivo_txt(caminho_arquivo):
     coef_saturação = (2*L*a*a)/(W*Ci)
     plt.plot(vgs,sqrt_ids)
     #plt.plot(vgs_intervalo, ids_intervalo, 'o', label='Dados experimentais',markersize=5)
+    #reta_intervalo = np.linspace(vgs_intervalo[0], x0, 10)
     plt.plot(vgs_intervalo, reta(vgs_intervalo, a, b), 'r-', label=f'Fitting')
-    plt.xlabel('VGS')
-    plt.ylabel('sqrt(IDS)')
+    plt.xlabel('VGS', fontsize = 14)
+    plt.ylabel('sqrt(|IDS|)', fontsize = 14)
+    plt.xticks(fontsize = 10)
+    plt.yticks(fontsize = 10)
     plt.legend()
     plt.show()
     print(f'O coeficiente de saturação é {coef_saturação}')
     # print(f'slope {a}')
     print(f'A tensão limiar é {x0}')
+    
+
 
 def salvar_dados():
     with open(caminho_arquivo, 'w') as file:
