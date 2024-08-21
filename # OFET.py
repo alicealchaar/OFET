@@ -91,7 +91,7 @@ def salvar_dados():
                 file.write("{:.7e}  {:.7e}  {:.7e}  {:.7e}  {:.7e} {:.7e}  {:.7e}    \n".format(
                     tempo[i], vds[i], vgs[i], ids[i], igs[i], abs_ids[i], sqrt_ids[i]))
 
-caminho_arquivo = 'C:/Users/Estudante/Desktop/LOEM/Alice/OFET/24 07 19/80um Escrever memória (-40V)/Autosave-2024-07-17~15.18.s-000-.txt'
+caminho_arquivo = 'C:/Users/Estudante/Desktop/LOEM/Alice/OFET/24 08 12 (férias)/Disp 2/80um/80um 24 08 08 (-40V) perfeito/50 primeiras/Autosave-2024-08-08~15.17.s-000-.txt'
 ler_arquivo_txt(caminho_arquivo)
 salvar_dados()
 
