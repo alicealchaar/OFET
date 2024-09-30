@@ -103,7 +103,7 @@ W = 1000
 Ci = 50
 arquivos = glob.glob(os.path.join(pasta,"*.txt")) #para ler cada cada arquivo .txt dentro da pasta
 for j,caminho_arquivo in enumerate (arquivos):
-    nome_arquivo = os.path.basename(caminho_arquivo) #
+    nome_arquivo = os.path.basename(caminho_arquivo) 
     medidas.append(j)
     ler_arquivo_txt(caminho_arquivo,L,W,Ci,j)
     salvar_dados()
@@ -117,12 +117,12 @@ plt.xlabel('Medidas')
 plt.ylabel('V_limiar')
 plt.show()
 
-def criar_arquivo(diretorio):
-    nome = "_DadosTemporais.txt"
-    caminho = os.path.join(diretorio, nome)
-    with open(caminho, 'w') as file:
-        for i in range (len(medidas)):
-            file.write("{:.7e}  {:.7e}\n".format(medidas[i],v_limiar_todos[i]))
+# # def criar_arquivo(diretorio):
+# #     nome = "_DadosTemporais.txt"
+# #     caminho = os.path.join(diretorio, nome)
+# #     with open(caminho, 'w') as file:
+# #         for i in range (len(medidas)):
+# #             file.write("{:.7e}  {:.7e}\n".format(medidas[i],v_limiar_todos[i]))
 
-criar_arquivo(pasta)
-print("Os dados foram salvos com sucesso!")
+# # criar_arquivo(pasta)
+# # print("Os dados foram salvos com sucesso!")
