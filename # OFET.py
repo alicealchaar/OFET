@@ -126,3 +126,5 @@ plt.show()
 
 # # criar_arquivo(pasta)
 # # print("Os dados foram salvos com sucesso!")
+
+#oiii
