@@ -8,8 +8,8 @@ from scipy.optimize import curve_fit
 import glob
 import re
 
-tempo,vds,vgs,ids,vgs,potência,v_inicial,v_final,x0,a,coef_saturação = [None]*11
-abs_ids,sqrt_ids,vgs_intervalo,ids_intervalo,v_limiar_todos, medidas= [],[],[],[],[],[]
+tempo,vds,vgs,ids,vgs,potência,v_inicial,v_final,x0_ida,x0_volta,a,coef_saturação = [None]*12
+abs_ids,sqrt_ids,vgs_intervalo_ida,ids_intervalo_ida,vgs_intervalo_volta,ids_intervalo_volta, v_limiar_ida,v_limiar_volta, medidas= [],[],[],[],[],[],[],[],[]
 
 def colunas_extras(ids):
     global abs_ids,sqrt_ids
@@ -27,9 +27,11 @@ def reta(x,a,b):
     return a * x + b
 
 def ler_arquivo_txt(caminho_arquivo,L,W,Ci,j):
-    global tempo,vds,vgs,ids,igs,vgs,potência, v_inicial,v_final, vgs_intervalo,ids_intervalo,x0,a, coef_saturação
-    vgs_intervalo=[]
-    ids_intervalo=[]
+    global tempo,vds,vgs,ids,igs,vgs,potência, v_inicial,v_final, vgs_intervalo_ida,ids_intervalo_ida, vgs_intervalo_volta,ids_intervalo_volta,x0_ida,x0_volta,a, coef_saturação, v_limiar_ida, v_limiar_volta
+    vgs_intervalo_volta=[]
+    ids_intervalo_volta=[]
+    vgs_intervalo_ida = []
+    ids_intervalo_ida = []
     with open(caminho_arquivo, 'r') as arquivo:
         linhas = arquivo.readlines()
         tempo = []
@@ -59,42 +61,37 @@ def ler_arquivo_txt(caminho_arquivo,L,W,Ci,j):
     # v_final = float(input("Agora, o valor final: "))
     v_inicial = int(-17)       ##########Lembrar de ajeitar esses valores
     v_final = int(-20)
-    # plt.close()
-    for pos,i in enumerate(vgs):
+    depois_da_curva = None
+    for pos,i in enumerate(vgs): #pos = index
         if pos>0:
             if i>vgs[pos-1]:
-                break
-            if i<=v_inicial and i>=v_final:
-                vgs_intervalo.append(i)
-                ids_intervalo.append(sqrt_ids[pos])
-    vgs_intervalo = np.array(vgs_intervalo)
-    ids_intervalo = np.array(ids_intervalo)
-    coef, incerteza = curve_fit(reta, vgs_intervalo, ids_intervalo)
-    a, b = coef
-    x0 = -b/a
-    coef_saturação = (2*L*a*a)/(W*Ci)
-    # plt.plot(vgs,sqrt_ids)
-    # # plt.plot(vgs_intervalo, ids_intervalo, 'o', label='Dados experimentais',markersize=5)
-    # plt.plot(vgs_intervalo, reta(vgs_intervalo, a, b), 'r-', label=f'Fitting {j}')
-    # plt.xlabel('VGS')
-    # plt.ylabel('sqrt(IDS)')
-    # plt.legend()
-    # plt.show()
-    # print(f'O coeficiente de saturação é {coef_saturação}')
-    # print(f'O valor de x para y=0 é {x0}')
-    v_limiar_todos.append(x0)
-
-
-def salvar_dados():
-    with open(caminho_arquivo, 'w') as file:
-        file.write("Tempo            VDS              VGS              IDS              IGS         |IDS|         sqrt(|IDS|)    V_limiar    coef_angular  mobilidade\n")
-        for i in range(len(tempo)):
-            if i == 0:
-                file.write("{:.7e}  {:.7e}  {:.7e}  {:.7e}  {:.7e} {:.7e}  {:.7e}    {:.7e}  {:.7e}   {:.7e}\n".format(
-                    tempo[i], vds[i], vgs[i], ids[i], igs[i], abs_ids[i], sqrt_ids[i], x0, a, coef_saturação))
+                depois_da_curva = 'ok'
+            if depois_da_curva == None:
+                if i<=v_inicial and i>=v_final:
+                    vgs_intervalo_ida.append(i)
+                    ids_intervalo_ida.append(sqrt_ids[pos])
             else:
-                file.write("{:.7e}  {:.7e}  {:.7e}  {:.7e}  {:.7e} {:.7e}  {:.7e}    \n".format(
-                    tempo[i], vds[i], vgs[i], ids[i], igs[i], abs_ids[i], sqrt_ids[i]))
+                if i<=v_inicial and i>=v_final:
+                    vgs_intervalo_volta.append(i)
+                    ids_intervalo_volta.append(sqrt_ids[pos])    
+    #ida           
+    vgs_intervalo_ida = np.array(vgs_intervalo_ida)
+    ids_intervalo_ida = np.array(ids_intervalo_ida)
+    coef_ida, incerteza_ida = curve_fit(reta, vgs_intervalo_ida, ids_intervalo_ida)
+    a_ida, b_ida = coef_ida
+    x0_ida = -b_ida/a_ida
+    # coef_saturação = (2*L*a*a)/(W*Ci)
+    v_limiar_ida.append(x0_ida) 
+
+    #volta
+    vgs_intervalo_volta = np.array(vgs_intervalo_volta)
+    ids_intervalo_volta = np.array(ids_intervalo_volta)
+    coef_volta, incerteza_volta = curve_fit(reta, vgs_intervalo_volta, ids_intervalo_volta)
+    a_volta, b_volta = coef_volta
+    x0_volta = -b_volta/a_volta
+    # coef_saturação = (2*L*a*a)/(W*Ci)
+    v_limiar_volta.append(x0_volta) 
+
 pasta = 'C:/Users/Estudante/Desktop/LOEM/Alice/OFET/24 08 12 (férias)/Disp 2/80um/80um 24 08 08 (-40V) perfeito'
 nome_pasta= os.path.basename(pasta)
 match = re.search(r'\d+',nome_pasta) #para pegar o comprimento do canal a partir do nome da pasta
@@ -106,16 +103,21 @@ for j,caminho_arquivo in enumerate (arquivos):
     nome_arquivo = os.path.basename(caminho_arquivo) 
     medidas.append(j)
     ler_arquivo_txt(caminho_arquivo,L,W,Ci,j)
-    salvar_dados()
     plt.plot(vgs,sqrt_ids)
     plt.xlabel("VGS")
     plt.ylabel("sqrt(IDS)")
 plt.show()
 
-plt.plot(medidas,v_limiar_todos,marker = 'o', color = 'blue')
+plt.plot(medidas,v_limiar_ida,marker = 'o', color = 'blue')
+plt.plot(medidas,v_limiar_volta,marker = 'o', color = 'red')
 plt.xlabel('Medidas')
 plt.ylabel('V_limiar')
 plt.show()
+
+# plt.plot(medidas,v_limiar_todos,marker = 'o', color = 'blue')
+# plt.xlabel('Medidas')
+# plt.ylabel('V_limiar')
+# plt.show()
 
 # # def criar_arquivo(diretorio):
 # #     nome = "_DadosTemporais.txt"
@@ -126,5 +128,3 @@ plt.show()
 
 # # criar_arquivo(pasta)
 # # print("Os dados foram salvos com sucesso!")
-
-#oiii
