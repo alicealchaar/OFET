@@ -9,7 +9,7 @@ import glob
 import re
 
 tempo,vds,vgs,ids,vgs,potência,v_inicial,v_final,x0_ida,x0_volta,a,coef_saturação = [None]*12
-abs_ids,sqrt_ids,vgs_intervalo_ida,ids_intervalo_ida,vgs_intervalo_volta,ids_intervalo_volta, v_limiar_ida,v_limiar_volta, medidas= [],[],[],[],[],[],[],[],[]
+abs_ids,sqrt_ids,vgs_intervalo_ida,ids_intervalo_ida,vgs_intervalo_volta,ids_intervalo_volta, v_limiar_ida,v_limiar_volta, medidas, ids_leitura_ida, ids_leitura_volta= [],[],[],[],[],[],[],[],[],[],[]
 
 def colunas_extras(ids):
     global abs_ids,sqrt_ids
@@ -27,7 +27,7 @@ def reta(x,a,b):
     return a * x + b
 
 def ler_arquivo_txt(caminho_arquivo,L,W,Ci,j):
-    global tempo,vds,vgs,ids,igs,vgs,potência, v_inicial,v_final, vgs_intervalo_ida,ids_intervalo_ida, vgs_intervalo_volta,ids_intervalo_volta,x0_ida,x0_volta,a, coef_saturação, v_limiar_ida, v_limiar_volta
+    global tempo,vds,vgs,ids,igs,vgs,potência, v_inicial,v_final, vgs_intervalo_ida,ids_intervalo_ida, vgs_intervalo_volta,ids_intervalo_volta,x0_ida,x0_volta,a, coef_saturação, v_limiar_ida, v_limiar_volta, ids_leitura_ida, ids_leitura_volta
     vgs_intervalo_volta=[]
     ids_intervalo_volta=[]
     vgs_intervalo_ida = []
@@ -82,8 +82,7 @@ def ler_arquivo_txt(caminho_arquivo,L,W,Ci,j):
     x0_ida = -b_ida/a_ida
     # coef_saturação = (2*L*a*a)/(W*Ci)
     v_limiar_ida.append(x0_ida) 
-
-    #volta
+     #volta
     vgs_intervalo_volta = np.array(vgs_intervalo_volta)
     ids_intervalo_volta = np.array(ids_intervalo_volta)
     coef_volta, incerteza_volta = curve_fit(reta, vgs_intervalo_volta, ids_intervalo_volta)
@@ -91,6 +90,31 @@ def ler_arquivo_txt(caminho_arquivo,L,W,Ci,j):
     x0_volta = -b_volta/a_volta
     # coef_saturação = (2*L*a*a)/(W*Ci)
     v_limiar_volta.append(x0_volta) 
+
+    i_depois_da_curva = None
+    i15_ida = ids[0]
+    i15_volta = ids[0]
+
+    #plt.plot(vgs,sqrt_ids, color = 'red')
+
+    for pos, i in enumerate(vgs):
+        if pos != 0:
+            if i>vgs[pos-1]:
+                i_depois_da_curva = 'ok'
+            if i_depois_da_curva == None:
+                if abs(vgs[pos]+15)<abs(vgs[pos-1]+15):
+                    i15_ida = ids[pos]
+                else:
+                    i15_ida = ids[pos-1]
+            else:
+                if abs(vgs[pos]+15)<abs(vgs[pos-1]+15):
+                    i15_volta = ids[pos]
+                else:
+                    i15_volta = ids[pos-1]
+    
+    ids_leitura_ida.append(i15_ida)
+    ids_leitura_volta.append(i15_volta)
+    
 
 pasta = 'C:/Users/Estudante/Desktop/LOEM/Alice/OFET/24 08 12 (férias)/Disp 2/80um/80um 24 08 08 (-40V) perfeito'
 nome_pasta= os.path.basename(pasta)
@@ -108,10 +132,16 @@ for j,caminho_arquivo in enumerate (arquivos):
     plt.ylabel("sqrt(IDS)")
 plt.show()
 
-plt.plot(medidas,v_limiar_ida,marker = 'o', color = 'blue')
-plt.plot(medidas,v_limiar_volta,marker = 'o', color = 'red')
+# plt.plot(medidas,v_limiar_ida,marker = 'o', color = 'blue')
+# plt.plot(medidas,v_limiar_volta,marker = 'o', color = 'red')
+# plt.xlabel('Medidas')
+# plt.ylabel('V_limiar')
+# plt.show()
+
+plt.plot(medidas,ids_leitura_ida,marker = 'o', color = 'blue')
+plt.plot(medidas,ids_leitura_volta,marker = 'o', color = 'red')
 plt.xlabel('Medidas')
-plt.ylabel('V_limiar')
+plt.ylabel('IDS')
 plt.show()
 
 # plt.plot(medidas,v_limiar_todos,marker = 'o', color = 'blue')
