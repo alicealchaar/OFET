@@ -94,6 +94,8 @@ def ler_arquivo_txt(caminho_arquivo,L,W,Ci,j):
     i_depois_da_curva = None
     i15_ida = ids[0]
     i15_volta = ids[0]
+    i15_ida_indice = 0
+    i15_volta_indice = 0
 
     #plt.plot(vgs,sqrt_ids, color = 'red')
 
@@ -102,19 +104,16 @@ def ler_arquivo_txt(caminho_arquivo,L,W,Ci,j):
             if i>vgs[pos-1]:
                 i_depois_da_curva = 'ok'
             if i_depois_da_curva == None:
-                if abs(vgs[pos]+15)<abs(vgs[pos-1]+15):
+                if abs(vgs[pos]+15)<abs(vgs[i15_ida_indice]+15):
                     i15_ida = ids[pos]
-                else:
-                    i15_ida = ids[pos-1]
+                    i15_ida_indice = pos
             else:
-                if abs(vgs[pos]+15)<abs(vgs[pos-1]+15):
+                if abs(vgs[pos]+15)<abs(vgs[i15_volta_indice]+15):
                     i15_volta = ids[pos]
-                else:
-                    i15_volta = ids[pos-1]
+                    i15_volta_indice = pos 
     
     ids_leitura_ida.append(i15_ida)
     ids_leitura_volta.append(i15_volta)
-    
 
 pasta = 'C:/Users/Estudante/Desktop/LOEM/Alice/OFET/24 08 12 (férias)/Disp 2/80um/80um 24 08 08 (-40V) perfeito'
 nome_pasta= os.path.basename(pasta)
